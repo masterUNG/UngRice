@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ungrice/utility/normal_dialog.dart';
@@ -125,10 +127,55 @@ class _RegisterState extends State<Register> {
             password.isEmpty) {
           normalDialog(context, 'Have Space', 'Please Fill Every Blank');
         } else {
-          
+          uploadImageToServer();
         }
       },
     );
+  }
+
+  //  นี่คือตัวอย่างการ อัพโหลดรูป ไป Server เว้ยเห้ย
+  Future<void> uploadImageToServer()async{
+
+    try {
+
+      String url = 'https://www.androidthai.in.th/rice/saveFileUng.php';
+
+      Map<String, dynamic> map = Map();
+
+      Random random = Random();
+      int i = random.nextInt(100000);
+
+      map['file'] = UploadFileInfo(file, 'user$i.jpg');
+      FormData formData = FormData.from(map);
+
+      var response = await Dio().post(url, data: formData);
+      print('response = ${response.toString()}');
+
+      urlPath = 'https://www.androidthai.in.th/rice/Ung/user$i.jpg';
+      insertDataToMySQL();
+      
+    } catch (e) {
+      print('error ==> ${e.toString()}');
+    }
+
+  }
+
+  Future<void> insertDataToMySQL()async{
+
+    try {
+
+      String url = 'https://www.androidthai.in.th/rice/addUserUng.php?isAdd=true&Name=$name&User=$user&Password=$password&Avatar=$urlPath';
+      var response = await Dio().get(url);
+
+      if (response.toString() == 'true') {
+        Navigator.of(context).pop();
+      } else {
+        normalDialog(context, 'Cannot Register', 'Please Try Agains');
+      }
+
+    } catch (e) {
+    }
+
   }
 
   @override
