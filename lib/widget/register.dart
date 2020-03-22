@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ungrice/utility/normal_dialog.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   // Field
   File file;
+  String name, user, password, urlPath;
 
   // Method
   Widget nameForm() {
@@ -18,6 +20,7 @@ class _RegisterState extends State<Register> {
     String title = 'Name :';
     String help = 'Type Your Name In Blank';
     return TextField(
+      onChanged: (value) => name = value.trim(),
       decoration: InputDecoration(
         enabledBorder:
             UnderlineInputBorder(borderSide: BorderSide(color: color)),
@@ -39,6 +42,7 @@ class _RegisterState extends State<Register> {
     String title = 'User :';
     String help = 'Type Your User In Blank';
     return TextField(
+      onChanged: (value) => user = value.trim(),
       decoration: InputDecoration(
         enabledBorder:
             UnderlineInputBorder(borderSide: BorderSide(color: color)),
@@ -60,6 +64,7 @@ class _RegisterState extends State<Register> {
     String title = 'Password :';
     String help = 'Type Your Password In Blank';
     return TextField(
+      onChanged: (value) => password = value.trim(),
       decoration: InputDecoration(
         enabledBorder:
             UnderlineInputBorder(borderSide: BorderSide(color: color)),
@@ -85,7 +90,8 @@ class _RegisterState extends State<Register> {
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width,
-        child: file == null ? Image.asset('images/avartar.png') : Image.file(file) ,
+        child:
+            file == null ? Image.asset('images/avartar.png') : Image.file(file),
       ),
     );
   }
@@ -101,14 +107,27 @@ class _RegisterState extends State<Register> {
       setState(() {
         file = object;
       });
-
     } catch (e) {}
   }
 
   Widget registerButton() {
     return IconButton(
       icon: Icon(Icons.cloud_upload),
-      onPressed: () {},
+      onPressed: () {
+        if (file == null) {
+          normalDialog(context, 'Non Choose Avatar',
+              'Please Click Image For Open Camera');
+        } else if (name == null ||
+            name.isEmpty ||
+            user == null ||
+            user.isEmpty ||
+            password == null ||
+            password.isEmpty) {
+          normalDialog(context, 'Have Space', 'Please Fill Every Blank');
+        } else {
+          
+        }
+      },
     );
   }
 
