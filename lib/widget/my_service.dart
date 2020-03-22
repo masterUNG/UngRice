@@ -9,10 +9,30 @@ class MyService extends StatefulWidget {
 }
 
 class _MyServiceState extends State<MyService> {
+  // Field
+  String nameLogin;
+
+  // Method
+  @override
+  void initState(){
+    super.initState();
+    nameLogin = widget.name;
+  }
+
+  Widget showNameLogin() {
+    return Column(
+      children: <Widget>[
+        Text('Login by'),
+        Text(nameLogin),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(actions: <Widget>[showNameLogin()],
+        backgroundColor: Colors.orange.shade700,
         title: Text('My Service'),
       ),
     );
